@@ -8,6 +8,14 @@ def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('/Users/user/AndroidStudioProjects/PexelApp/store/pixels-app-key')
+            storePassword '12345678'
+            keyAlias 'key0'
+            keyPassword '12345678'
+        }
+    }
     namespace 'com.example.pexelapp'
     compileSdk 33
 
@@ -25,9 +33,23 @@ android {
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
+        debug {
+            applicationIdSuffix '.debug'
+            debuggable true
+        }
+
+        staging {
+            initWith debug
+            minifyEnabled true
+            applicationIdSuffix '.staging'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            signingConfig signingConfigs.release
+            shrinkResources true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules-staging.pro'
         }
     }
     compileOptions {
